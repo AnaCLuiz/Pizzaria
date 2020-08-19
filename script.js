@@ -1,7 +1,7 @@
-let modalQtd = 1;
-
 const dqs = (el) => document.querySelector(el);
 const dqsa = (el) => document.querySelectorAll(el);
+
+let modalQtd = 1;
 
 // Listagem das pizzas
 pizzaJson.map((item, index) => {
@@ -34,6 +34,7 @@ pizzaJson.map((item, index) => {
         // Remove seleção ativa do tamanho
         dqs('.pizzaInfo--size.selected').classList.remove('selected');
 
+        // Seleciona como padrão a maior opção de tamanho
         dqsa('.pizzaInfo--size').forEach((size, sizeIndex) => {
             if(sizeIndex == 2){
                 size.classList.add('selected');
@@ -42,6 +43,7 @@ pizzaJson.map((item, index) => {
             size.querySelector('span').innerHTML = pizzaJson[key].sizes[sizeIndex];
         })
 
+        // Atualiza quantidade selecionada
         dqs('.pizzaInfo--qt').innerHTML = modalQtd;
 
         // Transição ao abrir modal
@@ -68,6 +70,29 @@ function closeModal(){
     }, 200)
 }
 
+// Fecha modal
 dqsa('.pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton').forEach((item) => {
     item.addEventListener('click', closeModal);
 })
+
+// Diminui quantidade ao clique
+dqs('.pizzaInfo--qtmenos').addEventListener('click', () => {
+    if(modalQtd > 1){
+        modalQtd--;
+        dqs('.pizzaInfo--qt').innerHTML = modalQtd;
+    }
+});
+
+// Aumenta quantidade ao clique
+dqs('.pizzaInfo--qtmais').addEventListener('click', () => {
+    modalQtd++;
+    dqs('.pizzaInfo--qt').innerHTML = modalQtd;
+});
+
+// Troca seleção de tamanho
+dqsa('.pizzaInfo--size').forEach((size) => {
+    size.addEventListener('click', () => {
+        dqs('.pizzaInfo--size.selected').classList.remove('selected');
+        size.classList.add('selected');
+    });
+});
