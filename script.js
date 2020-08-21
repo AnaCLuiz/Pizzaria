@@ -125,15 +125,37 @@ dqs('.pizzaInfo--addButton').addEventListener('click', () => {
     closeModal();
 });
 
+// Controla aparição do mobile cart
+dqs('.menu-openner').addEventListener('click', () => {
+    if(cart.length >= 1) {
+        dqs('aside').style.left = '0';
+    }
+});
+
+dqs('.menu-closer').addEventListener('click', () => {
+    dqs('aside').style.left = '100vw';
+});
+
 function updateCart(){
+    // Exibe número de itens no mobile cart
+    dqs('.menu-openner span').innerHTML = cart.length;
+
     if(cart.length > 0) {
+        // Controlando aparição do desktop cart
         dqs('aside').classList.add('show');
+        //
         dqs('.cart').innerHTML = '';
+
+        let subtotal = 0;
+        let desconto = 0;
+        let total = 0;
 
         for(let i in cart) {
             let pizzaItem = pizzaJson.find((item) => {
                 return item.id == cart[i].id;
             })
+
+            subtotal += pizzaItem.price * cart[i].qt;
 
             let cartItem = dqs('.models .cart--item').cloneNode(true);
 
@@ -163,7 +185,7 @@ function updateCart(){
                 } else {
                     cart.splice(i, 1);
                 }
-                
+
                 updateCart();
             });
 
@@ -175,7 +197,15 @@ function updateCart(){
             dqs('.cart').append(cartItem);
         }
 
+        desconto = subtotal * 0.1;
+        total = subtotal - desconto;
+
+        dqs('.subtotal span:last-child').innerHTML = `R$ ${subtotal.toFixed(2)}`;
+        dqs('.desconto span:last-child').innerHTML = `R$ ${desconto.toFixed(2)}`;
+        dqs('.total span:last-child').innerHTML = `R$ ${total.toFixed(2)}`;
+
     } else {
         dqs('aside').classList.remove('show');
+        dqs('aside').style.left = '100vw';
     }
 }
