@@ -104,11 +104,22 @@ dqsa('.pizzaInfo--size').forEach((size) => {
 dqs('.pizzaInfo--addButton').addEventListener('click', () => {
     let size = parseInt(dqs('.pizzaInfo--size.selected').getAttribute('data-key'));
 
-    cart.push({
-        id: pizzaJson[modalKey].id,
-        size,
-        qt: modalQtd
-    });
+    let identifier = pizzaJson[modalKey].id+'@'+size;
+
+    let key = cart.findIndex((item) => {
+        return item.identifier == identifier;
+    })
+
+    if(key > -1) {
+        cart[key].qt += modalQtd;
+    } else {
+        cart.push({
+            identifier,
+            id: pizzaJson[modalKey].id,
+            size,
+            qt: modalQtd
+        });
+    }
     
     closeModal();
 });
